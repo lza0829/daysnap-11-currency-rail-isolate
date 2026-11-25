@@ -24,11 +24,11 @@ export default function 断档跳变() {
         <h2 className="段题">断档记录</h2>
         {!断档.length ? <div className="空态">无断档</div> : (
           <table>
-            <thead><tr><th>账户键</th><th>缺营业日</th><th>处置</th><th>批次</th><th>时刻</th></tr></thead>
+            <thead><tr><th>账户键</th><th>币种</th><th>缺营业日</th><th>处置</th><th>批次</th><th>时刻</th></tr></thead>
             <tbody>
               {断档.map((r) => (
                 <tr key={r.编号}>
-                  <td>{r.账户键}</td><td>{r.缺营业日}</td><td>{r.处置}</td><td>{r.检出批次编号}</td><td>{r.时刻}</td>
+                  <td>{r.账户键}</td><td><span className="徽章 通">{r.币种}</span></td><td>{r.缺营业日}</td><td>{r.处置}</td><td>{r.检出批次编号}</td><td>{r.时刻}</td>
                 </tr>
               ))}
             </tbody>
@@ -39,11 +39,11 @@ export default function 断档跳变() {
         <h2 className="段题">跳变记录</h2>
         {!跳变.length ? <div className="空态">无跳变</div> : (
           <table>
-            <thead><tr><th>账户键</th><th>营业日</th><th>前日</th><th>当日</th><th>流水净额</th><th>偏离</th></tr></thead>
+            <thead><tr><th>账户键</th><th>币种</th><th>营业日</th><th>前日</th><th>当日</th><th>流水净额</th><th>偏离</th></tr></thead>
             <tbody>
               {跳变.map((r) => (
                 <tr key={r.编号}>
-                  <td>{r.账户键}</td><td>{r.营业日}</td><td>{r.前日余额}</td><td>{r.当日余额}</td><td>{r.流水净额}</td><td>{r.偏离}</td>
+                  <td>{r.账户键}</td><td><span className="徽章 通">{r.币种}</span></td><td>{r.营业日}</td><td>{r.前日余额}</td><td>{r.当日余额}</td><td>{r.流水净额}</td><td>{r.偏离}</td>
                 </tr>
               ))}
             </tbody>

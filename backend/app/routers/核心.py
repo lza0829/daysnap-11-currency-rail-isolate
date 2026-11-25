@@ -3,6 +3,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from app.db import 夹具目录, 连接
+from app.modules.币种隔离 import 混轨失败闭, 轨核证
 from app.services import 回放, 抽取, 目录, 装载
 
 路由 = APIRouter(prefix="/api")
@@ -69,7 +70,7 @@ def 列流水(营业日: str = "", 账户键: str = ""):
 
 
 @路由.get("/快照")
-def 列快照(营业日: str = "", 账户键: str = ""):
+def 列快照(营业日: str = "", 账户键: str = "", 币种: str = ""):
     conn = 连接()
     try:
         sql = "SELECT * FROM 周期快照 WHERE 状态='有效'"
@@ -80,8 +81,21 @@ def 列快照(营业日: str = "", 账户键: str = ""):
         if 账户键:
             sql += " AND 账户键=?"
             args.append(账户键)
-        sql += " ORDER BY 营业日 DESC, 账户键 LIMIT 300"
+        if 币种:
+            sql += " AND 币种=?"
+            args.append(币种.strip().upper())
+        sql += " ORDER BY 营业日 DESC, 账户键, 币种 LIMIT 300"
         return [dict(r) for r in conn.execute(sql, args)]
+    finally:
+        conn.close()
+
+
+@路由.get("/轨核证")
+def 取轨核证(账户键: str = "", 营业日: str = ""):
+    """币种轨核证：分轨余额、禁混计标记、valid。不提供跨币合计接口。"""
+    conn = 连接()
+    try:
+        return 轨核证(conn, 账户键.strip(), 营业日.strip())
     finally:
         conn.close()
 
@@ -204,6 +218,8 @@ def 执行抽取(体: 营业日请求):
         return 抽取.日终抽取(体.营业日, 体.批次编号)
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
+    except 混轨失败闭 as e:
+        raise HTTPException(409, f"混轨失败闭：{e}") from e
 
 
 @路由.post("/回放")
@@ -212,6 +228,8 @@ def 执行回放(体: 营业日请求):
         return 回放.回放核对(体.营业日, 体.批次编号)
     except ValueError as e:
         raise HTTPException(400, str(e)) from e
+    except 混轨失败闭 as e:
+        raise HTTPException(409, f"混轨失败闭：{e}") from e
 
 
 @路由.post("/重置业务库")

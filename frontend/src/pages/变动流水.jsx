@@ -48,6 +48,7 @@ export default function 变动流水() {
             <tr>
               <th>流水号</th>
               <th>账户键</th>
+              <th>币种</th>
               <th>营业日</th>
               <th>变动额</th>
               <th>摘要</th>
@@ -59,6 +60,7 @@ export default function 变动流水() {
               <tr key={r.流水号}>
                 <td>{r.流水号}</td>
                 <td>{r.账户键}</td>
+                <td><span className="徽章 通">{r.币种}</span></td>
                 <td>{r.营业日}</td>
                 <td>{r.变动额}</td>
                 <td>{r.摘要}</td>

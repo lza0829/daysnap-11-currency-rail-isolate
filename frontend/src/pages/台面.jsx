@@ -21,13 +21,16 @@ export default function 台面() {
     try {
       await api.重置();
       await api.装载夹具("三日连环样例.json");
+      await api.装载夹具("双币种分轨样例.json");
       const a = await api.抽取("2026-11-20");
       const b = await api.抽取("2026-11-21");
       const c = await api.抽取("2026-11-22");
       const r = await api.回放("2026-11-22");
+      const 证 = await api.轨核证();
       await 刷新();
       set讯(
-        `冒烟完成：抽取 ${a.写入 + a.盖写}/${b.写入 + b.盖写}/${c.写入 + c.盖写}；回放通过=${r.通过} 差额=${r.差额}`
+        `冒烟完成：抽取分轨 ${a.分轨数}/${b.分轨数}/${c.分轨数}；回放通过=${r.通过} 差额=${r.差额}；` +
+        `币种轨核证 valid=${证.valid} 禁混计=${证.禁混计}（无未标币种单行总余额）`
       );
     } catch (e) {
       set讯(String(e.message || e));

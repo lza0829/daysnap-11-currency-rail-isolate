@@ -25,6 +25,7 @@ export default function 差额清单() {
             <tr>
               <th>回放批次</th>
               <th>账户键</th>
+              <th>币种</th>
               <th>营业日</th>
               <th>快照余额</th>
               <th>回放余额</th>
@@ -37,6 +38,7 @@ export default function 差额清单() {
               <tr key={r.编号}>
                 <td>{r.回放批次编号}</td>
                 <td>{r.账户键}</td>
+                <td><span className="徽章 通">{r.币种}</span></td>
                 <td>{r.营业日}</td>
                 <td>{r.快照余额 ?? "—"}</td>
                 <td>{r.回放余额 ?? "—"}</td>
